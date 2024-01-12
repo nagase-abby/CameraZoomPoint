@@ -24,7 +24,8 @@ public class CameraController : MonoBehaviour
         var cameraSize = cam.orthographicSize;
 
         // 現在のカメラサイズが指定のサイズ範囲の何%かを求める
-        var percent = GetCameraPercent(cameraSize) / 100;
+        var percent = GetCameraPercent(cameraSize);
+        Debug.Log($"現在のカメラサイズ:{cameraSize}でカメラ範囲{zoomInfo.MinZoom} - {zoomInfo.MaxZoom}の時、全体の{percent * 100}%にあたります");
 
         // 求めたカメラサイズ割合から原点座標から目標座標のどのくらいの位置になるかをもとめる
         // 例(8,2) -> (100,100)
@@ -36,6 +37,9 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(goleX, goleY, -10);
     }
 
+    /// <summary>
+    /// 現在のカメラサイズが指定のサイズ範囲の何%かを求める
+    /// </summary>
     private float GetCameraPercent(float cameraSize)
     {
         // カメラ最大値・最小値
@@ -45,14 +49,12 @@ public class CameraController : MonoBehaviour
         // 範囲を0から最大値に変換
         var rangeMax = maxSize - minSize;
 
-        // 現在サイズを0から最大値の範囲内の値に変換
+        // 現在サイズが最小値からどのくらい離れているか / 0(最小値)から最大値丸め
         var rangeCameraSize = cameraSize - minSize;
 
         // 現在のカメラサイズが0から最大値の何%に当たるか
         // 0のとき100%とする
         var percent = 100 - (rangeCameraSize / rangeMax * 100);
-
-        Debug.Log($"現在のカメラサイズ:{cameraSize}でカメラ範囲{minSize} - {maxSize}の時、全体の{percent}%にあたります");
-        return percent;
+        return percent / 100;
     }
 }
